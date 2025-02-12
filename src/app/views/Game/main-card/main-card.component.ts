@@ -1,26 +1,43 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Card, CardModule } from 'primeng/card';
+import { Component, EventEmitter, Input, OnChanges, Output, ChangeDetectorRef, SimpleChanges} from '@angular/core';
+import { CardModule } from 'primeng/card';
 import { Button, ButtonModule } from 'primeng/button';
+import { PokemonDataDto } from '../../../Dtos/Pokemon/PokemonData/pokemon-dataDto';
 
 @Component({
   selector: 'app-main-card',
   imports: [CardModule, Button, ButtonModule],
   template: `
-    <p-card [style]="{ width: '25rem', overflow: 'hidden', backgroundColor: '#F7F9F9'}" class="text-center">
-    <ng-template #header>
-      @if(pokeNumber !== 0) 
-      {
+    <p-card [style]="{ width: '25rem', overflow: 'hidden', backgroundColor: 'black'}" class="text-center">
+
+    @if(!isLoading){
+      <ng-template #header>
         <img alt="Card" class="w-full" src="/PokedexImages/images/{{pokeNumberFormated}}.png" />
+      </ng-template>
+      <ng-template #title> {{this.pokemonDataDto.name}}</ng-template>
+      
+      <div class="flex justify-center gap-4">
+
+      
+      @for(type of this.pokemonDataDto.types; track type.slot){
+        <p>
+        <span>
+        <img class="substitute" src="/PokedexImages/Type-Icons/types/{{type.type.name}}.png" alt="">
+        </span>
+      </p>
       }
-      @else {
-        <img alt="Card" class="w-full" src="/PokedexImages/images/{{pokeNumberFormated}}.png" />
-      }
-        
-    </ng-template>
-    <ng-template #title> {{pokeName + "#"+pokeNumber}}</ng-template>
-    <ng-template #subtitle> Subtitle </ng-template>
+      </div>
+      
+      <ng-template #subtitle> #{{this.pokemonDataDto.id}}</ng-template>
+    }
+    @else{
+      <ng-template #header>
+      <img alt="Card" class="w-full" src="/PokedexImages/images/001.png" />
+      </ng-template>
+      <ng-template #subtitle> Subtitle</ng-template>
+    }
     <div class="flex justify-center gap-4">
-    @for(_ of [].constructor(lives); track _) {
+
+    @for(_ of [].constructor(lives); track $index) {
       <span><img class="substitute" src="/Img/substitute.png" alt=""></span>
     }
     </div>
@@ -46,23 +63,30 @@ import { Button, ButtonModule } from 'primeng/button';
   }
   `]
 })
-export class MainCardComponent {
+
+export class MainCardComponent{
   @Input() lives = 0;
   @Input() pokeNumber = 0;
   @Input() pokeNumberFormated = '';
+  @Input() pokemonDataDto!: PokemonDataDto;
   @Input() pokeName = '';
+  @Input() isLoading: boolean = true;
   @Output() show = new EventEmitter<boolean>();
   @Output() getNewPokemonApi = new EventEmitter<void>();
+
+
+
+
 
   shouldRender: boolean = true;
   
 
   sendShowRules(show: boolean) {
-    console.log(show);
     this.show.emit(show);
+    console.log("from rules: "+this.isLoading+" number: "+this.pokeNumber)
   }
 
-  triggerParentNewPokemon(){
+ triggerParentNewPokemon(){
     this.getNewPokemonApi.emit();
   }
 

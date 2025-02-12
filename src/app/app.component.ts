@@ -7,7 +7,7 @@ import { MainViewComponent } from './views/Game/main-view/main-view.component';
   imports: [RouterOutlet, MainViewComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  styles: [`body:{background-color: blue;}`]
+  styles: []
 })
 export class AppComponent {
   title = 'FirstProyect';

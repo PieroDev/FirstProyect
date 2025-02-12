@@ -1,11 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { effect, NgModule } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject, resource } from '@angular/core';
 import { MainCardComponent } from '../main-card/main-card.component';
 import { FlexTestComponent } from '../flex-test/flex-test.component';
 import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
+import { ApiService } from '../../../services/api.service';
+import { PokemonDataDto } from '../../../Dtos/Pokemon/PokemonData/pokemon-dataDto';
+import { Observable} from 'rxjs';
 
 @Component({
   selector: 'app-main-view',
@@ -19,11 +22,14 @@ import { ButtonModule } from 'primeng/button';
       [lives] = "lives"
       [pokeNumber] ="pokeNumber"
       pokeNumberFormated ="{{pokeNumberFormated}}"
-      pokename = 'pokeName'
+      pokeName = '{{pokeName}}'
+      [pokemonDataDto] = "pokeNewDataDto"
       (show)="getShowRules($event)"
       (getNewPokemonApi)="getNewPokemonByApi()"
+      [isLoading] = 'isLoadingData'
       >
       </app-main-card>
+      
     </div>
     <div class="flex-row-container">
     <app-flex-test></app-flex-test>
@@ -77,6 +83,7 @@ import { ButtonModule } from 'primeng/button';
 }
 )
 export class MainViewComponent {
+  private getNewPokemon = inject(ApiService);
   showRule = false;
   Generation = 1;
   lives = 3;
@@ -84,16 +91,40 @@ export class MainViewComponent {
   level = 1;
   pokeNumber = 0;
   pokeNumberFormated = '';
+  pokeName = '';
+  asd = `/PokedexImages/images/${this.pokeNumberFormated}.png`
+  pokemonData$!: Observable<PokemonDataDto>;
+  pokeNewDataDto!: PokemonDataDto;
+  isLoadingData = true; 
+  private apiUrl = 'https://pokeapi.co/api/v2/pokemon/';
 
   getShowRules(show: boolean){
-    console.log("visibleRules");
     this.showRule = show;
   }
 
   getNewPokemonByApi(){
+    this.isLoadingData = true;
     this.pokeNumber = Math.floor(Math.random() * (151 - 1 + 1)) + 1;
     this.pokeNumberFormated = String(this.pokeNumber).padStart(3, '0');
-    console.log("New Pokemon");
+    this.pokemonData$  = this.getNewPokemon.getPokemonData(this.pokeNumber);
+    this.pokemonData$.subscribe(data => {
+      this.pokeNewDataDto = data;
+      //console.log(this.pokeNewDataDto.name)
+    })
+    this.isLoadingData = false;
+    //console.log(this.pokeNewDataDto.name+" - " + this.pokeNewDataDto.url+ " - "+ this.asd )   
+     // this.pokemon.reload()
   }
 
+  getGoodPracticePokemon(){
+    this.pokeNumber = Math.floor(Math.random() * (151 - 1 + 1)) + 1;
+    this.pokeNumberFormated = String(this.pokeNumber).padStart(3, '0');
+    this.pokemonData$ = this.getNewPokemon.getPokeGoodPractice(this.pokeNumber);
+    this.pokemonData$.subscribe(data => {
+      this.pokeNewDataDto = data;
+      this.pokeNewDataDto.url = `/PokedexImages/images/${this.pokeNumberFormated}.png`
+      console.log(this.pokeNewDataDto.name+" - " + this.pokeNewDataDto.url+ " - "+ this.asd )
+    })
+    //this.pokemon.reload()
+  }
 }
