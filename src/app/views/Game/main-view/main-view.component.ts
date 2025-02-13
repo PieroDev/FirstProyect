@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { effect, NgModule } from '@angular/core';
+import { ChangeDetectorRef, effect, NgModule, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, resource } from '@angular/core';
 import { MainCardComponent } from '../main-card/main-card.component';
@@ -8,11 +8,11 @@ import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
 import { ApiService } from '../../../services/api.service';
 import { PokemonDataDto } from '../../../Dtos/Pokemon/PokemonData/pokemon-dataDto';
-import { Observable, timeout} from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 
 @Component({
   selector: 'app-main-view',
-  imports: [MainCardComponent, FlexTestComponent, DrawerModule, ButtonModule],
+  imports: [MainCardComponent, DrawerModule, ButtonModule],
   providers: [],
   template: `
   <body>
@@ -22,17 +22,17 @@ import { Observable, timeout} from 'rxjs';
       [lives] = "lives"
       [pokeNumber] ="pokeNumber"
       [pokeNumberFormated] ='pokeNumberFormated'
-      [pokeName] = 'pokeName'
+      [pokeName] = "pokeName"
       [pokemonDataDto] = "pokeNewDataDto"
       (show)="getShowRules($event)"
       (getNewPokemonApi)="getNewPokemonByApi()"
-      [isLoading] = 'isLoadingData'
+      [isLoading] = isLoadingData()
       >
       </app-main-card>
       
     </div>
     <div class="flex-row-container">
-    <app-flex-test></app-flex-test>
+    <!-- <app-flex-test></app-flex-test> -->
     <div class="card flex justify-center">
 
     <p-drawer [(visible)]="showRule" header="Game Rules" styleClass="!w-full md:!w-80 lg:!w-[30rem]" >
@@ -60,7 +60,7 @@ import { Observable, timeout} from 'rxjs';
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    height: 100%;
+    height: 100vh;
     width: 100%;
   }
   .flex-column-container{
@@ -79,11 +79,12 @@ import { Observable, timeout} from 'rxjs';
   }
   
   `]
-  
+
 }
 )
 export class MainViewComponent {
   private getNewPokemon = inject(ApiService);
+  private cd = inject(ChangeDetectorRef);
   showRule = false;
   Generation = 1;
   lives = 3;
@@ -92,30 +93,30 @@ export class MainViewComponent {
   pokeNumber = 0;
   pokeNumberFormated = '';
   pokeName = '';
-  asd = `/PokedexImages/images/${this.pokeNumberFormated}.png`
-  pokemonData$!: Observable<PokemonDataDto>;
-  pokeNewDataDto!: PokemonDataDto;
-  isLoadingData = true; 
+  pokeNewDataDto!: any;
+  isLoadingData = signal(true);
   private apiUrl = 'https://pokeapi.co/api/v2/pokemon/';
 
-  getShowRules(show: boolean){
+  getShowRules(show: boolean) {
     this.showRule = show;
   }
 
-  getNewPokemonByApi(){
-    this.isLoadingData = true;
+  getNewPokemonByApi() {
+    this.isLoadingData.set(true);
     this.pokeNumber = Math.floor(Math.random() * (151 - 1 + 1)) + 1;
     this.pokeNumberFormated = String(this.pokeNumber).padStart(3, '0');
-    this.pokemonData$  = this.getNewPokemon.getPokemonData(this.pokeNumber);
-    this.pokemonData$.subscribe(data => {
-      this.isLoadingData = false;
-      this.pokeNewDataDto = data;
+    this.getNewPokemon
+      .getPokemonData(this.pokeNumber)
+      .subscribe(data => {
+        this.pokeNewDataDto = data;
+        this.cd.detectChanges();
+        this.isLoadingData.set(false);
 
-      //console.log(this.pokeNewDataDto.name)
-    })
-    
+        //console.log(this.pokeNewDataDto.name)
+      })
+
     //console.log(this.pokeNewDataDto.name+" - " + this.pokeNewDataDto.url+ " - "+ this.asd )   
-     // this.pokemon.reload()
+    // this.pokemon.reload()
   }
 
   // getGoodPracticePokemon(){
