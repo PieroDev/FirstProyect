@@ -8,7 +8,7 @@ import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
 import { ApiService } from '../../../services/api.service';
 import { PokemonDataDto } from '../../../Dtos/Pokemon/PokemonData/pokemon-dataDto';
-import { Observable} from 'rxjs';
+import { Observable, timeout} from 'rxjs';
 
 @Component({
   selector: 'app-main-view',
@@ -21,8 +21,8 @@ import { Observable} from 'rxjs';
       <app-main-card
       [lives] = "lives"
       [pokeNumber] ="pokeNumber"
-      pokeNumberFormated ="{{pokeNumberFormated}}"
-      pokeName = '{{pokeName}}'
+      [pokeNumberFormated] ='pokeNumberFormated'
+      [pokeName] = 'pokeName'
       [pokemonDataDto] = "pokeNewDataDto"
       (show)="getShowRules($event)"
       (getNewPokemonApi)="getNewPokemonByApi()"
@@ -108,23 +108,25 @@ export class MainViewComponent {
     this.pokeNumberFormated = String(this.pokeNumber).padStart(3, '0');
     this.pokemonData$  = this.getNewPokemon.getPokemonData(this.pokeNumber);
     this.pokemonData$.subscribe(data => {
+      this.isLoadingData = false;
       this.pokeNewDataDto = data;
+
       //console.log(this.pokeNewDataDto.name)
     })
-    this.isLoadingData = false;
+    
     //console.log(this.pokeNewDataDto.name+" - " + this.pokeNewDataDto.url+ " - "+ this.asd )   
      // this.pokemon.reload()
   }
 
-  getGoodPracticePokemon(){
-    this.pokeNumber = Math.floor(Math.random() * (151 - 1 + 1)) + 1;
-    this.pokeNumberFormated = String(this.pokeNumber).padStart(3, '0');
-    this.pokemonData$ = this.getNewPokemon.getPokeGoodPractice(this.pokeNumber);
-    this.pokemonData$.subscribe(data => {
-      this.pokeNewDataDto = data;
-      this.pokeNewDataDto.url = `/PokedexImages/images/${this.pokeNumberFormated}.png`
-      console.log(this.pokeNewDataDto.name+" - " + this.pokeNewDataDto.url+ " - "+ this.asd )
-    })
-    //this.pokemon.reload()
-  }
+  // getGoodPracticePokemon(){
+  //   this.pokeNumber = Math.floor(Math.random() * (151 - 1 + 1)) + 1;
+  //   this.pokeNumberFormated = String(this.pokeNumber).padStart(3, '0');
+  //   this.pokemonData$ = this.getNewPokemon.getPokeGoodPractice(this.pokeNumber);
+  //   this.pokemonData$.subscribe(data => {
+  //     this.pokeNewDataDto = data;
+  //     this.pokeNewDataDto.url = `/PokedexImages/images/${this.pokeNumberFormated}.png`
+  //     console.log(this.pokeNewDataDto.name+" - " + this.pokeNewDataDto.url+ " - "+ this.asd )
+  //   })
+  //   //this.pokemon.reload()
+  // }
 }

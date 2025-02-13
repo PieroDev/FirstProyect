@@ -8,16 +8,14 @@ import { PokemonDataDto } from '../../../Dtos/Pokemon/PokemonData/pokemon-dataDt
   imports: [CardModule, Button, ButtonModule],
   template: `
     <p-card [style]="{ width: '25rem', overflow: 'hidden', backgroundColor: 'black'}" class="text-center">
-
     @if(!isLoading){
+    <!-- Aca si saco el ng-template y solo dejo la img funciona correctamente, investigar -->
       <ng-template #header>
-        <img alt="Card" class="w-full" src="/PokedexImages/images/{{pokeNumberFormated}}.png" />
+        <img alt="Card" class="w-full" [src]="'/PokedexImages/images/'+this.pokeNumberFormated+'.png'" />
       </ng-template>
       <ng-template #title> {{this.pokemonDataDto.name}}</ng-template>
-      
-      <div class="flex justify-center gap-4">
 
-      
+      <div class="flex justify-center gap-4">
       @for(type of this.pokemonDataDto.types; track type.slot){
         <p>
         <span>
@@ -26,12 +24,11 @@ import { PokemonDataDto } from '../../../Dtos/Pokemon/PokemonData/pokemon-dataDt
       </p>
       }
       </div>
-      
       <ng-template #subtitle> #{{this.pokemonDataDto.id}}</ng-template>
     }
     @else{
       <ng-template #header>
-      <img alt="Card" class="w-full" src="/PokedexImages/images/001.png" />
+      <img alt="Card" class="w-full" src="/Img/icon-Pokeball.png" />
       </ng-template>
       <ng-template #subtitle> Subtitle</ng-template>
     }
@@ -43,7 +40,6 @@ import { PokemonDataDto } from '../../../Dtos/Pokemon/PokemonData/pokemon-dataDt
     </div>
     <p>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt
-        quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!
     </p>
     <ng-template #footer>
         <div class="flex gap-4 mt-1">
@@ -73,10 +69,6 @@ export class MainCardComponent{
   @Input() isLoading: boolean = true;
   @Output() show = new EventEmitter<boolean>();
   @Output() getNewPokemonApi = new EventEmitter<void>();
-
-
-
-
 
   shouldRender: boolean = true;
   
