@@ -33,17 +33,17 @@ export class ApiService {
 
   getPokemonData(pokeId: number){
     const myUrl = `${this.apiUrl}${pokeId}`;
-    return this.http.get<PokemonDataDto>(myUrl, {observe: 'response'}).pipe(
+    return this.http.get<PokemonDataDto>(myUrl, {observe: 'response'})
+    .pipe(
       map(pokeData => {
       if(pokeData.ok && pokeData.body){
-        const pokeDataDto: PokemonDataDto = pokeData.body
+        const pokeDataDto: PokemonDataDto = PokemonDataDto.fromJS(pokeData.body)
         return pokeDataDto;
       }
       else{
         throw new Error('Failed to fetch data');
       }
-      
-    }));    
+    }));
   }
 
 

@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { ChangeDetectorRef, effect, NgModule, signal } from '@angular/core';
+import { effect, NgModule, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, resource } from '@angular/core';
 import { MainCardComponent } from '../main-card/main-card.component';
@@ -17,11 +17,11 @@ import { Observable, timeout } from 'rxjs';
   template: `
   <body>
     <div class="flex-column-container">
-    <h1><img src="/Img/logo.png" alt=""></h1>
+    <h1><img class="logo" src="/Img/logo.png" alt=""></h1>
       <app-main-card
       [lives] = "lives"
       [pokeNumber] ="pokeNumber"
-      [pokeNumberFormated] ='pokeNumberFormated'
+      [pokeNumberFormated] ="pokeNumberFormated"
       [pokeName] = "pokeName"
       [pokemonDataDto] = "pokeNewDataDto"
       (show)="getShowRules($event)"
@@ -77,6 +77,9 @@ import { Observable, timeout } from 'rxjs';
     height: 2rem;
     display: inline-block;
   }
+  .logo{
+    height: 15vh
+  }
   
   `]
 
@@ -84,7 +87,6 @@ import { Observable, timeout } from 'rxjs';
 )
 export class MainViewComponent {
   private getNewPokemon = inject(ApiService);
-  private cd = inject(ChangeDetectorRef);
   showRule = false;
   Generation = 1;
   lives = 3;
@@ -93,7 +95,7 @@ export class MainViewComponent {
   pokeNumber = 0;
   pokeNumberFormated = '';
   pokeName = '';
-  pokeNewDataDto!: any;
+  pokeNewDataDto!: PokemonDataDto;
   isLoadingData = signal(true);
   private apiUrl = 'https://pokeapi.co/api/v2/pokemon/';
 
@@ -108,8 +110,10 @@ export class MainViewComponent {
     this.getNewPokemon
       .getPokemonData(this.pokeNumber)
       .subscribe(data => {
+        console.log(typeof(data));
+       
         this.pokeNewDataDto = data;
-        this.cd.detectChanges();
+        console.log('pokemon', this.pokeNewDataDto);
         this.isLoadingData.set(false);
 
         //console.log(this.pokeNewDataDto.name)
