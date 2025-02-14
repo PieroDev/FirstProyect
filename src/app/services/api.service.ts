@@ -15,22 +15,6 @@ export class ApiService {
     withFetch()
   }
 
-  // getPokemonData(pokeId: number){
-  //   const myUrl = `${this.apiUrl}${pokeId}`;
-
-  //   this.http.get<PokemonDataDto>(myUrl, {observe: 'response'}).subscribe(pokeData => {
-  //     var pokeDataDto: PokemonDataDto;
-  //     if(pokeData.ok){
-  //       const pokeDataDto =
-  //       // var jsonResponse = pokeData.body?.name;
-  //       // console.log(jsonResponse);
-  //       //pokeDataDto = pokeData
-  //       return pokeDataDto;
-  //     }
-      
-  //   });    
-  // }
-
   getPokemonData(pokeId: number){
     const myUrl = `${this.apiUrl}${pokeId}`;
     return this.http.get<PokemonDataDto>(myUrl, {observe: 'response'})

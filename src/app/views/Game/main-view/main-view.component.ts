@@ -17,24 +17,29 @@ import { Observable, timeout } from 'rxjs';
   template: `
   <body>
     <div class="flex-column-container">
-    <h1><img class="logo" src="/Img/logo.png" alt=""></h1>
-      <app-main-card
-      [lives] = "lives"
-      [pokeNumber] ="pokeNumber"
-      [pokeNumberFormated] ="pokeNumberFormated"
-      [pokeName] = "pokeName"
-      [pokemonDataDto] = "pokeNewDataDto"
-      (show)="getShowRules($event)"
-      (getNewPokemonApi)="getNewPokemonByApi()"
-      [isLoading] = isLoadingData()
-      >
-      </app-main-card>
+    <img class="logo" src="/Img/logo.png" alt="">
+      @if(startAgain){
+        <app-main-card
+          [lives] = lives
+          [level]=level
+          [clues]="clues"
+          [pokeNumber]=pokeNumber
+          [pokeNumberFormated] =pokeNumberFormated
+          [pokeName] = pokeName
+          [pokemonDataDto] = pokeNewDataDto
+          (show)="getShowRules($event)"
+          (getNewPokemonApi)="getNewPokemonByApi()"
+          [isLoading] = isLoadingData()
+          (retry)="retry()"
+        >
+        </app-main-card>
+      }
+      
       
     </div>
     <div class="flex-row-container">
     <!-- <app-flex-test></app-flex-test> -->
-    <div class="card flex justify-center">
-
+  <div class="card flex justify-center">
     <p-drawer [(visible)]="showRule" header="Game Rules" styleClass="!w-full md:!w-80 lg:!w-[30rem]" >
     <ul class="list-disc">
       <li class="mt-2">Every time you fail a guess, you lose 1 life out of 3</li>
@@ -47,7 +52,7 @@ import { Observable, timeout } from 'rxjs';
     </ul>
     <img class="psyRules" src="/Img/PsyRules.png" alt="">
     </p-drawer>
-</div>
+  </div>
 
 </div>
     
@@ -78,7 +83,7 @@ import { Observable, timeout } from 'rxjs';
     display: inline-block;
   }
   .logo{
-    height: 15vh
+    width: 25rem;
   }
   
   `]
@@ -91,29 +96,39 @@ export class MainViewComponent {
   Generation = 1;
   lives = 3;
   clues = 3;
-  level = 1;
+  level = 0;
   pokeNumber = 0;
   pokeNumberFormated = '';
   pokeName = '';
   pokeNewDataDto!: PokemonDataDto;
   isLoadingData = signal(true);
   private apiUrl = 'https://pokeapi.co/api/v2/pokemon/';
+  startAgain = true;
+
+  retry(){
+    this.pokeNumber = 0;
+    this.isLoadingData.set(true);
+    this.pokeNumberFormated = '';
+    this.startAgain = false;
+    this.startAgain = true;
+    this.level = 0;
+    this.clues = 3;
+  }
 
   getShowRules(show: boolean) {
     this.showRule = show;
   }
 
   getNewPokemonByApi() {
+    this.level++;
     this.isLoadingData.set(true);
     this.pokeNumber = Math.floor(Math.random() * (151 - 1 + 1)) + 1;
     this.pokeNumberFormated = String(this.pokeNumber).padStart(3, '0');
     this.getNewPokemon
       .getPokemonData(this.pokeNumber)
       .subscribe(data => {
-        console.log(typeof(data));
-       
         this.pokeNewDataDto = data;
-        console.log('pokemon', this.pokeNewDataDto);
+        // console.log('pokemon', this.pokeNewDataDto);
         this.isLoadingData.set(false);
 
         //console.log(this.pokeNewDataDto.name)
