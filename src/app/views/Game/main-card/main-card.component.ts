@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
     @if(level > 0 && lives > 0){
       @if(!isLoading() && pokemonDataDto){
       <div class="flex items-center justify-center pokeImgContainer">
-        <p-image  alt="CardImg" [class]="{'silhouette': this.guessResult == 'unanswered', 'correctAnswer': this.guessResult == 'ok', 'errorAnswer': this.guessResult == 'fail'}" class="w-full mx-auto m-1 pokeImg " 
+        <p-image alt="CardImg" [class]="{'silhouette': this.guessResult == 'unanswered', 'correctAnswer': this.guessResult == 'ok', 'errorAnswer': this.guessResult == 'fail'}" class="w-full mx-auto m-1 pokeImg " 
         src= "assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" /> 
       </div>
       <div class="card flex items-center flex-col justify-center inputsContainer" >
@@ -29,33 +29,31 @@ import { FormsModule } from '@angular/forms';
           <p-inputotp name="guessInput" type="text" [(ngModel)]="this.childGuess" [length]="pokeNameFormated.length" size="small" (keydown)="keydownDetect($event, this.childGuess)" [autofocus]="true" ></p-inputotp>
           <p-inputotp name="cluesInput" class="mt-2" type="text" [(ngModel)]="this.actualClue" [length]="pokeNameFormated.length" size="small" [disabled]="true"></p-inputotp>
         }
-        <!-- <p class="pokeData pokemonNameP">{{pokeNameFormated}}</p>
-        <p class="pokeData pokemonDataP">#{{pokemonDataDto.id}}</p> -->
-        <p class="pokeData pokemonDataP">Clues left: {{clues}}</p>
-        <p class="pokeData pokemonDataP">Generation: {{generation}}</p>
+        <p class="pokeData">Clues left: {{clues}}</p>
+        <p class="pokeData">Generation: {{generation}}</p>
       </div>
 
       
       }
     @else{
       <div class="flex items-center justify-center pokeImgContainer">
-      <p class="pokeData pokemonDataP"></p>
-      <p class="pokeData pokemonDataP"></p>
+      <p class=""></p>
+      <p class=""></p>
       </div>
       <div class="card flex items-center flex-col justify-center inputsContainer" >
-        <p class="pokeData pokemonDataP"></p>
-        <p class="pokeData pokemonDataP"></p>
+        <p class="pokeData"></p>
+        <p class="pokeData"></p>
       </div>
 
 
     }
     <!-- asd -->
-    <div class="flex flex-col justify-center gap-4 mt-4" [style]="{height: '5rem'}">
-      <p class="pokemonDataP">{{level > 0 ? 'Types:': ''}}</p>
+    <div class="flex flex-col justify-center" [style]="{height: '2rem'}">
+      <p class="pokeData">{{level > 0 ? 'Types:': ''}}</p>
       <div class="flex flex-row justify-center gap-4" [style]="{height: '5rem'}">
         @if(!isLoading() && this.pokemonDataDto){
           @for(type of this.pokemonDataDto.types; track type.slot){
-            <p class="pokemonDataP">
+            <p class="pokeData">
               <span>
                 <img class="pokemonTypesIcon" title="{{type.type.name}}" src="assets/PokedexImages/Type-Icons/types/{{type.type.name}}.png" alt="{{type.type.name}}">
               </span>
