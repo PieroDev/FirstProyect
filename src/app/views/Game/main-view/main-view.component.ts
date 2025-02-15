@@ -224,7 +224,7 @@ export class MainViewComponent {
       idFormated: this.pokeNumberFormated
     })
     console.log("getGuess: ",input);
-    if(input == this.pokeNewDataDto.name){
+    if(input.toLowerCase() === this.pokeNewDataDto.name.toLowerCase()){
       this.setResponseResult('ok')
     }
     else{
