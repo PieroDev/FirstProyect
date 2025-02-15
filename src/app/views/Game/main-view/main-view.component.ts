@@ -54,24 +54,24 @@ import { GenerationLevels, myData } from '../../../Dtos/GenerationLevels/generat
       <li class="mt-2">Every time you fail a guess, you lose 1 life out of 3</li>
       <li class="mt-2">You have 3 
       <span>
-          <img class="rulesIcon" src="/assets/Img/substitute.png" alt="Lives Icon">
+          <img class="rulesIcon" src="assets/Img/substitute.png" alt="Lives Icon">
         </span>
         (clues) for each pokemon, you can get a clue pressing the 
         <span>
-          <img class="rulesIcon" src="/assets/Img/lens.webp" alt="Clue Icon">
+          <img class="rulesIcon" src="assets/Img/lens.webp" alt="Clue Icon">
         </span> button
       </li>
       <li class="mt-2">Each three pokemon that you guess, you'll advance to the next generation.</li>
       <li class="mt-2">Press ⏎ (Enter) or the 
         <span>
-          <img class="rulesIcon" src="/assets/Img/icon-Pokeball.png" alt="Guess Icon">
+          <img class="rulesIcon" src="assets/Img/icon-Pokeball.png" alt="Guess Icon">
         </span> to make your guess.
       </li>
       <li class="mt-2">Some pokemon has especial characters, like Nidoran-f and Nidoran-m, another examples are Mr-mime and Tapu-Koko</li>
       <li class="mt-2">Don't worry about capital letters.</li>
       <li class="mt-2">Have fun!</li>
     </ul>
-    <img class="psyRules" src="/assets/Img/PsyRules.png" alt="">
+    <img class="psyRules" src="assets/Img/PsyRules.png" alt="">
     </p-drawer>
   </div>
 
