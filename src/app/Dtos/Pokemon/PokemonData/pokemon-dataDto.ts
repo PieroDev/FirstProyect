@@ -56,7 +56,6 @@ export class PokemonDataDto {
   }
 }
 
-
 interface IPokemonDataDto {
   id: number;
   name: string;

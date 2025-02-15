@@ -10,5 +10,5 @@ import { MainViewComponent } from './views/Game/main-view/main-view.component';
   styles: []
 })
 export class AppComponent {
-  title = 'FirstProyect';
+  title = 'Pokemon Name Guessr';
 }

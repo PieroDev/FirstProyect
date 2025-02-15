@@ -8,7 +8,8 @@ import { DrawerModule } from 'primeng/drawer';
 import { ButtonModule } from 'primeng/button';
 import { ApiService } from '../../../services/api.service';
 import { PokemonDataDto } from '../../../Dtos/Pokemon/PokemonData/pokemon-dataDto';
-import { Observable, timeout } from 'rxjs';
+import { AnswersDto } from '../../../Dtos/Answer/answers-dto';
+import { GenerationLevels, myData } from '../../../Dtos/GenerationLevels/generation-levels';
 
 @Component({
   selector: 'app-main-view',
@@ -18,22 +19,30 @@ import { Observable, timeout } from 'rxjs';
   <body>
     <div class="flex-column-container">
     <img class="logo" src="/Img/logo.png" alt="">
-      @if(startAgain){
-        <app-main-card
-          [lives] = lives
+    <app-main-card
+          [generation]=generation
+          [lives]=lives
           [level]=level
-          [clues]="clues"
+          [clues]=clues
           [pokeNumber]=pokeNumber
           [pokeNumberFormated] =pokeNumberFormated
           [pokeName] = pokeName
           [pokemonDataDto] = pokeNewDataDto
-          (show)="getShowRules($event)"
-          (getNewPokemonApi)="getNewPokemonByApi()"
+          (show)=getShowRules($event)
+          (nextPokemonLevel)=nextPokemonLevel()
           [isLoading] = isLoadingData()
-          (retry)="retry()"
+          (retry)=retry()
+          (startGame)=start()
+          [startLevel]=startLevel()
+          (addPokeAnswer)="addPokeAnswer($event)"
+          [answersData]=pokeAnswers
+          [pokeNameFormated]=pokeNameFormated
+          (getClue)="getClue()"
+          (getGuess)="getGuess($event)"
+          [actualClue]="actualClue"
+          [guessResult]="guessResult"
         >
-        </app-main-card>
-      }
+      </app-main-card>
       
       
     </div>
@@ -43,9 +52,21 @@ import { Observable, timeout } from 'rxjs';
     <p-drawer [(visible)]="showRule" header="Game Rules" styleClass="!w-full md:!w-80 lg:!w-[30rem]" >
     <ul class="list-disc">
       <li class="mt-2">Every time you fail a guess, you lose 1 life out of 3</li>
-      <li class="mt-2">You have 3 clues for each pokemon, you can ask a clue pressing the "clue" button</li>
-      <li class="mt-2">Each five pokemon that you guess, you'll advance to the next generation.</li>
-      <li class="mt-2">Press ⏎ (Enter) or the <span><img class="pokeballRule" src="/Img/icon-Pokeball.png" alt=""></span> to make your guess</li>
+      <li class="mt-2">You have 3 
+      <span>
+          <img class="rulesIcon" src="/Img/substitute.png" alt="Lives Icon">
+        </span>
+        (clues) for each pokemon, you can get a clue pressing the 
+        <span>
+          <img class="rulesIcon" src="/Img/lens.webp" alt="Clue Icon">
+        </span> button
+      </li>
+      <li class="mt-2">Each three pokemon that you guess, you'll advance to the next generation.</li>
+      <li class="mt-2">Press ⏎ (Enter) or the 
+        <span>
+          <img class="rulesIcon" src="/Img/icon-Pokeball.png" alt="Guess Icon">
+        </span> to make your guess.
+      </li>
       <li class="mt-2">Some pokemon has especial characters, like Nidoran-f and Nidoran-m, another examples are Mr-mime and Tapu-Koko</li>
       <li class="mt-2">Don't worry about capital letters.</li>
       <li class="mt-2">Have fun!</li>
@@ -78,7 +99,7 @@ import { Observable, timeout } from 'rxjs';
     flex-direction: column;
     align-items: center;
   }
-  .pokeballRule{
+  .rulesIcon{
     height: 2rem;
     display: inline-block;
   }
@@ -92,61 +113,148 @@ import { Observable, timeout } from 'rxjs';
 )
 export class MainViewComponent {
   private getNewPokemon = inject(ApiService);
-  showRule = false;
-  Generation = 1;
+  public generationsArray: GenerationLevels[];
+  showRule = signal(false);
+  isLoadingData = signal(true);
+  startAgain = signal(true);
+  startLevel = signal(true);
+  generation = 1;
   lives = 3;
   clues = 3;
   level = 0;
   pokeNumber = 0;
   pokeNumberFormated = '';
+  pokeNameFormated = '';
   pokeName = '';
   pokeNewDataDto!: PokemonDataDto;
-  isLoadingData = signal(true);
-  private apiUrl = 'https://pokeapi.co/api/v2/pokemon/';
-  startAgain = true;
+  pokeAnswers: AnswersDto[] = []
+  guess = '';
+  actualClue='';
+  guessResult = 'unanswered'
+
+  constructor(){
+    this.generationsArray = myData
+  }
+
+  start(){
+    this.resetGameData();
+  }
 
   retry(){
-    this.pokeNumber = 0;
-    this.isLoadingData.set(true);
-    this.pokeNumberFormated = '';
-    this.startAgain = false;
-    this.startAgain = true;
-    this.level = 0;
+    this.resetGameData();
+  }
+
+  resetGameData(){
+    this.generation = 1;
     this.clues = 3;
+    this.lives = 3;
+    this.level = 0;
+    this.isLoadingData.set(true);
+    this.pokeNumber = 0;
+    this.pokeNumberFormated = '';
+    this.pokeNameFormated = '';
+    this.pokeAnswers = [];
+    this.nextPokemonLevel();
+    this.startLevel.set(false);
+  }
+
+  getClue(){
+    if(this.pokeNewDataDto.name != this.actualClue && this.clues > 0){
+      this.clues--;
+      console.log(this.pokeNewDataDto.name);
+      if(this.actualClue == ''){
+        this.actualClue = this.initializeCreatedString(this.pokeNewDataDto.name)
+        console.log(this.actualClue)
+      }
+      this.actualClue = this.revealRandomCharacter(this.pokeNewDataDto.name, this.actualClue);
+      console.log(this.actualClue);
+    }
   }
 
   getShowRules(show: boolean) {
-    this.showRule = show;
+    this.showRule.set(show);
+  }
+
+  nextPokemonLevel(){
+    this.actualClue='';
+    this.clues = 3;
+    if(this.level > 0 && this.level%3 == 0 ){
+      this.generation++;
+      console.log("generation: ", this.generation)
+    }
+    this.level++;
+    this.startLevel.set(false);
+    this.isLoadingData.set(true);
+    this.getNewPokemonByApi();
   }
 
   getNewPokemonByApi() {
-    this.level++;
-    this.isLoadingData.set(true);
-    this.pokeNumber = Math.floor(Math.random() * (151 - 1 + 1)) + 1;
+    let newPokeNumber = 0;
+    let actualGenerationLevel = myData.find(x => x.generation == this.generation)
+    do{
+      newPokeNumber = Math.floor(Math.random() * (actualGenerationLevel?.end! - actualGenerationLevel?.start! + 1)) + actualGenerationLevel?.start!
+    }
+    while(newPokeNumber > 0 && this.pokeAnswers.some(x => x.id === newPokeNumber))
+
+    this.pokeNumber = newPokeNumber;
     this.pokeNumberFormated = String(this.pokeNumber).padStart(3, '0');
     this.getNewPokemon
       .getPokemonData(this.pokeNumber)
       .subscribe(data => {
         this.pokeNewDataDto = data;
-        // console.log('pokemon', this.pokeNewDataDto);
+        this.pokeNameFormated = this.formatPokeName(this.pokeNewDataDto.name)
         this.isLoadingData.set(false);
-
-        //console.log(this.pokeNewDataDto.name)
       })
-
-    //console.log(this.pokeNewDataDto.name+" - " + this.pokeNewDataDto.url+ " - "+ this.asd )   
-    // this.pokemon.reload()
   }
 
-  // getGoodPracticePokemon(){
-  //   this.pokeNumber = Math.floor(Math.random() * (151 - 1 + 1)) + 1;
-  //   this.pokeNumberFormated = String(this.pokeNumber).padStart(3, '0');
-  //   this.pokemonData$ = this.getNewPokemon.getPokeGoodPractice(this.pokeNumber);
-  //   this.pokemonData$.subscribe(data => {
-  //     this.pokeNewDataDto = data;
-  //     this.pokeNewDataDto.url = `/PokedexImages/images/${this.pokeNumberFormated}.png`
-  //     console.log(this.pokeNewDataDto.name+" - " + this.pokeNewDataDto.url+ " - "+ this.asd )
-  //   })
-  //   //this.pokemon.reload()
-  // }
+  addPokeAnswer(answerDto: AnswersDto){
+    this.pokeAnswers.push(answerDto);
+  }
+
+  formatPokeName(input: string){
+    return input.replace(/./g, "_");
+  }
+
+  getGuess(input: string){
+    console.log("getGuess: ",this.pokeNewDataDto.name);
+    this.actualClue = this.pokeNewDataDto.name;
+    const answerDto = new AnswersDto({
+      id: this.pokeNumber,
+      correct: true,
+      idFormated: this.pokeNumberFormated
+    })
+    console.log("getGuess: ",input);
+    if(input == this.pokeNewDataDto.name){
+      this.setResponseResult('ok')
+    }
+    else{
+      answerDto.correct = false;
+      if(this.lives > 0){
+        this.setResponseResult('fail')
+        this.lives--;
+      }
+    }
+    this.pokeAnswers.push(answerDto);
+  }
+
+  revealRandomCharacter(original: string, created: string): string {
+    let randomIndex: number;
+    do {
+      randomIndex = Math.floor(Math.random() * original.length);
+    } while (original[randomIndex] === created[randomIndex] || original[randomIndex] === ' ');
+  
+    return original.split('').map((char, i) => (i === randomIndex ? char : created[i])).join('');
+  }
+
+  initializeCreatedString(original: string): string {
+    return original.split('').map(char => (char === ' ' ? ' ' : ' ')).join('');
+  }
+
+  setResponseResult(input: string){
+    this.guessResult = input
+    setTimeout(() => {
+      this.guessResult = 'unanswered'
+      this.nextPokemonLevel();
+    }, 3000)
+  }
 }
