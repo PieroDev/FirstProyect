@@ -18,7 +18,7 @@ import { GenerationLevels, myData } from '../../../Dtos/GenerationLevels/generat
   template: `
   <body>
     <div class="flex-column-container">
-    <img class="logo" src="/Img/logo.png" alt="">
+    <img class="logo" src="assets/Img/logo.png" alt="">
     <app-main-card
           [generation]=generation
           [lives]=lives
