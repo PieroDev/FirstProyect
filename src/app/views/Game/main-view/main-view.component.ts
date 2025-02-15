@@ -82,12 +82,12 @@ import { GenerationLevels, myData } from '../../../Dtos/GenerationLevels/generat
   styles: [`
   body{ 
     margin: 0;
-    background-image: url(public/assets/Img/nightBackground.webp); 
+    //background-image: url(public/assets/Img/nightBackground.webp);
+    background: url(public/assets/Img/nightBackground.webp) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
-    width: 100%;
   }
   .flex-column-container{
     display: flex;
@@ -104,7 +104,7 @@ import { GenerationLevels, myData } from '../../../Dtos/GenerationLevels/generat
     display: inline-block;
   }
   .logo{
-    width: 25rem;
+    width: 30%;
   }
   
   `]

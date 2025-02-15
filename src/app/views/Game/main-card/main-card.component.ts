@@ -11,8 +11,8 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-main-card',
   imports: [CardModule, Button, ButtonModule, ImageModule, InputOtpModule, FormsModule],
   template: `
-  <div class="p-2 flex items-center justify-center">
-    <p-card  class="text-center" [style]="{ width: '30rem', overflow: 'hidden', backgroundColor: 'rgba(95, 99, 125, 0.31)'}">
+  <div class="card-container p-2 flex items-center justify-center">
+    <p-card  class="text-center" [style]="{overflow: 'hidden', backgroundColor: 'rgba(29, 33, 56, 0.82)'}">
     <!-- Aca si saco el ng-template y solo dejo la img funciona correctamente, investigar -->
     <!-- Comenzar a implementar botones de pistas y eventhandler para el Enter -->
     <!-- <p class="pokeData">Level: {{level}}</p>
@@ -26,7 +26,7 @@ import { FormsModule } from '@angular/forms';
       <div class="card flex items-center flex-col justify-center inputsContainer" >
       <!-- ngModel es el que relaciona el valor del input a la variable declarada -->
        @if(loadGuess){
-          <p-inputotp name="guessInput" type="text" [(ngModel)]="this.childGuess" [length]="pokeNameFormated.length" size="small" (keydown)="keydownDetect($event, this.childGuess)" [autofocus]="true" ></p-inputotp>
+          <p-inputotp class="inputText" name="guessInput" type="text" [(ngModel)]="this.childGuess" [length]="pokeNameFormated.length" size="small" (keydown)="keydownDetect($event, this.childGuess)" [autofocus]="true" ></p-inputotp>
           <p-inputotp name="cluesInput" class="mt-2" type="text" [(ngModel)]="this.actualClue" [length]="pokeNameFormated.length" size="small" [disabled]="true"></p-inputotp>
         }
         <p class="pokeData">Clues left: {{clues}}</p>
@@ -62,7 +62,7 @@ import { FormsModule } from '@angular/forms';
         }
       </div>
     </div>
-    <div class="flex flex-col justify-center gap-4" [style]="{height: '10rem'}" >
+    <div class="flex flex-col justify-center mt-2" [style]="{height: '10rem'}" >
       @if(!startLevel() && level > 0){
         <p class="pokeData">Lifes: </p>
       <div class="flex flex-row justify-center gap-4">
@@ -90,7 +90,7 @@ import { FormsModule } from '@angular/forms';
         </div>
     }
     @else if(lives == 0){
-      <h1 style="font-size: 50px; font-family: 'dogica'">Game Over</h1>
+      <h1 style="font-size: 50px;">Game Over</h1>
       <h3>Your Answers: </h3>
       <div class="flex gap-4 mt-2 flex-wrap justify-center">
         @for(answer of this.answersData; track answer.id){
@@ -108,17 +108,20 @@ import { FormsModule } from '@angular/forms';
 
   `,
   styles: [`
+  .card-container {
+    width: 100vw;
+  }
   .substitute{
-    width: 4rem;
+    width: 3rem;
   }
   .pokeImgContainer{
-    height: 15rem;
+    height: 10rem;
   }
   .inputsContainer{
     height: 15rem
   }
   .pokeImg{
-    width: 15rem;
+    width: 10rem;
   }
   .pokeData{
     margin: 1rem;
@@ -150,6 +153,9 @@ import { FormsModule } from '@angular/forms';
   }
   .GameIcon{
     height: 4rem;
+  }
+  .inputText{
+    font-size: 2rem;
   }
   `]
 })
