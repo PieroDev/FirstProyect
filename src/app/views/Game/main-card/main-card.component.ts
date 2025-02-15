@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
       @if(!isLoading() && pokemonDataDto){
       <div class="flex items-center justify-center pokeImgContainer">
         <p-image  alt="CardImg" [class]="{'silhouette': this.guessResult == 'unanswered', 'correctAnswer': this.guessResult == 'ok', 'errorAnswer': this.guessResult == 'fail'}" class="w-full mx-auto m-1 pokeImg " 
-        src= "/PokedexImages/images/{{this.pokeNumberFormated}}.png" /> 
+        src= "/assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" /> 
       </div>
       <div class="card flex items-center flex-col justify-center inputsContainer" >
       <!-- ngModel es el que relaciona el valor del input a la variable declarada -->
@@ -56,7 +56,7 @@ import { FormsModule } from '@angular/forms';
           @for(type of this.pokemonDataDto.types; track type.slot){
             <p class="pokemonDataP">
               <span>
-                <img class="pokemonTypesIcon" title="{{type.type.name}}" src="/PokedexImages/Type-Icons/types/{{type.type.name}}.png" alt="{{type.type.name}}">
+                <img class="pokemonTypesIcon" title="{{type.type.name}}" src="/assets/PokedexImages/Type-Icons/types/{{type.type.name}}.png" alt="{{type.type.name}}">
               </span>
             </p>
           }
@@ -68,7 +68,7 @@ import { FormsModule } from '@angular/forms';
         <p class="pokeData">Lifes: </p>
       <div class="flex flex-row justify-center gap-4">
       @for(_ of [].constructor(lives); track $index) {
-        <span><img class="substitute" src="/Img/substitute.png" alt=""></span>
+        <span><img class="substitute" src="/assets/Img/substitute.png" alt=""></span>
       }
       </div>
       }
@@ -77,12 +77,12 @@ import { FormsModule } from '@angular/forms';
     <div class="flex gap-4 mt-2 justify-center">
             <p-button variant="text" [rounded]="true" label="" (click)="sendGuess(this.childGuess);"  [outlined]="true" styleClass="w-full">
               <span>
-                <img class="GameIcon" src="/Img/icon-Pokeball.png" alt="Guess icon" title="Make guess">
+                <img class="GameIcon" src="/assets/Img/icon-Pokeball.png" alt="Guess icon" title="Make guess">
               </span>
             </p-button>
             <p-button variant="text" [rounded]="true" label="" (click)="pressGetClue();"  [outlined]="true" styleClass="w-full" [disabled]="this.clues > 0 ? false : true">
               <span>
-                <img class="GameIcon" src="/Img/lens.webp" alt="Clue icon" title="Get Clue">
+                <img class="GameIcon" src="/assets/Img/lens.webp" alt="Clue icon" title="Get Clue">
               </span>
             </p-button>
         </div>
@@ -95,7 +95,7 @@ import { FormsModule } from '@angular/forms';
       <h3>Your Answers: </h3>
       <div class="flex gap-4 mt-2 flex-wrap justify-center">
         @for(answer of this.answersData; track answer.id){
-          <p-image class="anwerItemImg" [class]="{'correctAnswer': answer.correct, 'errorAnswer': !answer.correct}" src= "/PokedexImages/images/{{answer.idFormated}}.png" alt="Image" width="250" />
+          <p-image class="anwerItemImg" [class]="{'correctAnswer': answer.correct, 'errorAnswer': !answer.correct}" src= "/assets/PokedexImages/images/{{answer.idFormated}}.png" alt="Image" width="250" />
         }
       </div>
       <p-button label="Retry" class="w-full" (click)="restart()"/>
@@ -187,8 +187,6 @@ export class MainCardComponent {
   pressGetClue(){
     this.getClue.emit();
   };
-
-  
 
   sendGuess(input: string){
     console.log("Input: ", this.childGuess);
