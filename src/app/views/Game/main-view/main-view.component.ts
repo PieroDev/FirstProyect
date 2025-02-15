@@ -82,7 +82,7 @@ import { GenerationLevels, myData } from '../../../Dtos/GenerationLevels/generat
   styles: [`
   body{ 
     margin: 0;
-    background-image: url(/assets/Img/nightBackground.webp); 
+    background-image: url(public/assets/Img/nightBackground.webp); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
