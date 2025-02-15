@@ -16,8 +16,6 @@ import { FormsModule } from '@angular/forms';
     class="cardClass text-center"
     [style]="{backgroundColor: 'rgba(29, 33, 56, 0.76)', minWidth: '75vw'}"
     >
-    
-
       @if(level > 0 && lives > 0){
         @if(!isLoading() && pokemonDataDto){
         <div class="flex items-center justify-center pokeImgContainer">
@@ -27,7 +25,7 @@ import { FormsModule } from '@angular/forms';
         <div class="card flex items-center flex-col justify-center inputsContainer" >
         <!-- ngModel es el que relaciona el valor del input a la variable declarada -->
         @if(loadGuess){
-            <p-inputotp class="inputText" name="guessInput" type="text" [(ngModel)]="this.childGuess" [length]="pokeNameFormated.length" size="small" (keydown)="keydownDetect($event, this.childGuess)" [autofocus]="true" ></p-inputotp>
+            <p-inputotp [style]="{fontSize: '16px'}" class="inputText" name="guessInput" type="text" [(ngModel)]="this.childGuess" [length]="pokeNameFormated.length" size="small" (keydown)="keydownDetect($event, this.childGuess)" [autofocus]="true" ></p-inputotp>
             <p-inputotp name="cluesInput" class="mt-2" type="text" [(ngModel)]="this.actualClue" [length]="pokeNameFormated.length" size="small" [disabled]="true"></p-inputotp>
           }
           <p class="pokeData">Clues left: {{clues}}</p>
