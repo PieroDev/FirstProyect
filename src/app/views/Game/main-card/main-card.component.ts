@@ -11,83 +11,84 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-main-card',
   imports: [CardModule, Button, ButtonModule, ImageModule, InputOtpModule, FormsModule],
   template: `
-  <div class="card-container p-2 flex items-center justify-center">
-    <p-card  class="text-center" [style]="{overflow: 'hidden', backgroundColor: 'rgba(29, 33, 56, 0.82)'}">
-    <!-- Aca si saco el ng-template y solo dejo la img funciona correctamente, investigar -->
-    <!-- Comenzar a implementar botones de pistas y eventhandler para el Enter -->
-    <!-- <p class="pokeData">Level: {{level}}</p>
-    <p class="pokeData ">Clues: {{clues}}</p> -->
-    @if(level > 0 && lives > 0){
-      @if(!isLoading() && pokemonDataDto){
-      <div class="flex items-center justify-center pokeImgContainer">
-        <p-image alt="CardImg" [class]="{'silhouette': this.guessResult == 'unanswered', 'correctAnswer': this.guessResult == 'ok', 'errorAnswer': this.guessResult == 'fail'}" class="w-full mx-auto m-1 pokeImg " 
-        src= "assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" /> 
-      </div>
-      <div class="card flex items-center flex-col justify-center inputsContainer" >
-      <!-- ngModel es el que relaciona el valor del input a la variable declarada -->
-       @if(loadGuess){
-          <p-inputotp class="inputText" name="guessInput" type="text" [(ngModel)]="this.childGuess" [length]="pokeNameFormated.length" size="small" (keydown)="keydownDetect($event, this.childGuess)" [autofocus]="true" ></p-inputotp>
-          <p-inputotp name="cluesInput" class="mt-2" type="text" [(ngModel)]="this.actualClue" [length]="pokeNameFormated.length" size="small" [disabled]="true"></p-inputotp>
-        }
-        <p class="pokeData">Clues left: {{clues}}</p>
-        <p class="pokeData">Generation: {{generation}}</p>
-      </div>
+  <!-- <div class="card-container p-2 flex items-center justify-center"> -->
+    <p-card  
+    class="cardClass text-center"
+    [style]="{backgroundColor: 'rgba(29, 33, 56, 0.76)', minWidth: '75vw'}"
+    >
+    
 
-      
-      }
-    @else{
-      <div class="flex items-center justify-center pokeImgContainer">
-      <p class=""></p>
-      <p class=""></p>
-      </div>
-      <div class="card flex items-center flex-col justify-center inputsContainer" >
-        <p class="pokeData"></p>
-        <p class="pokeData"></p>
-      </div>
-
-
-    }
-    <!-- asd -->
-    <div class="flex flex-col justify-center" [style]="{height: '2rem'}">
-      <p class="pokeData">{{level > 0 ? 'Types:': ''}}</p>
-      <div class="flex flex-row justify-center gap-4" [style]="{height: '5rem'}">
-        @if(!isLoading() && this.pokemonDataDto){
-          @for(type of this.pokemonDataDto.types; track type.slot){
-            <p class="pokeData">
-              <span>
-                <img class="pokemonTypesIcon" title="{{type.type.name}}" src="assets/PokedexImages/Type-Icons/types/{{type.type.name}}.png" alt="{{type.type.name}}">
-              </span>
-            </p>
+      @if(level > 0 && lives > 0){
+        @if(!isLoading() && pokemonDataDto){
+        <div class="flex items-center justify-center pokeImgContainer">
+          <p-image alt="CardImg" [class]="{'silhouette': this.guessResult == 'unanswered', 'correctAnswer': this.guessResult == 'ok', 'errorAnswer': this.guessResult == 'fail'}" class="w-full mx-auto m-1 pokeImg " 
+          src= "assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" /> 
+        </div>
+        <div class="card flex items-center flex-col justify-center inputsContainer" >
+        <!-- ngModel es el que relaciona el valor del input a la variable declarada -->
+        @if(loadGuess){
+            <p-inputotp class="inputText" name="guessInput" type="text" [(ngModel)]="this.childGuess" [length]="pokeNameFormated.length" size="small" (keydown)="keydownDetect($event, this.childGuess)" [autofocus]="true" ></p-inputotp>
+            <p-inputotp name="cluesInput" class="mt-2" type="text" [(ngModel)]="this.actualClue" [length]="pokeNameFormated.length" size="small" [disabled]="true"></p-inputotp>
           }
+          <p class="pokeData">Clues left: {{clues}}</p>
+          <p class="pokeData">Generation: {{generation}}</p>
+        </div>
+
+        
+        }
+      @else{
+        <div class="flex items-center justify-center pokeImgContainer">
+        <p class=""></p>
+        <p class=""></p>
+        </div>
+        <div class="card flex items-center flex-col justify-center inputsContainer" >
+          <p class="pokeData"></p>
+          <p class="pokeData"></p>
+        </div>
+
+
+      }
+      <!-- asd -->
+      <div class="flex flex-col justify-center" [style]="{height: '2rem'}">
+        <p class="pokeData">{{level > 0 ? 'Types:': ''}}</p>
+        <div class="flex flex-row justify-center gap-4" [style]="{height: '5rem'}">
+          @if(!isLoading() && this.pokemonDataDto){
+            @for(type of this.pokemonDataDto.types; track type.slot){
+              <p class="pokeData">
+                <span>
+                  <img class="pokemonTypesIcon" title="{{type.type.name}}" src="assets/PokedexImages/Type-Icons/types/{{type.type.name}}.png" alt="{{type.type.name}}">
+                </span>
+              </p>
+            }
+          }
+        </div>
+      </div>
+      <div class="flex flex-col justify-center mt-2" [style]="{height: '10rem'}" >
+        @if(!startLevel() && level > 0){
+          <p class="pokeData">Lifes: </p>
+        <div class="flex flex-row justify-center gap-4">
+        @for(_ of [].constructor(lives); track $index) {
+          <span><img class="substitute" src="assets/Img/substitute.png" alt=""></span>
+        }
+        </div>
         }
       </div>
-    </div>
-    <div class="flex flex-col justify-center mt-2" [style]="{height: '10rem'}" >
-      @if(!startLevel() && level > 0){
-        <p class="pokeData">Lifes: </p>
-      <div class="flex flex-row justify-center gap-4">
-      @for(_ of [].constructor(lives); track $index) {
-        <span><img class="substitute" src="assets/Img/substitute.png" alt=""></span>
-      }
-      </div>
-      }
-    </div>
 
-    <div class="flex gap-4 mt-2 justify-center">
-            <p-button variant="text" [rounded]="true" label="" (click)="sendGuess(this.childGuess);"  [outlined]="true" styleClass="w-full">
-              <span>
-                <img class="GameIcon" src="assets/Img/icon-Pokeball.png" alt="Guess icon" title="Make guess">
-              </span>
-            </p-button>
-            <p-button variant="text" [rounded]="true" label="" (click)="pressGetClue();"  [outlined]="true" styleClass="w-full" [disabled]="this.clues > 0 ? false : true">
-              <span>
-                <img class="GameIcon" src="assets/Img/lens.webp" alt="Clue icon" title="Get Clue">
-              </span>
-            </p-button>
-        </div>
-        <div class="flex gap-4 mt-2 justify-center">
-          <p-button label="Rules"(click)="sendShowRules(true)"/>
-        </div>
+      <div class="flex gap-4 mt-2 justify-center">
+              <p-button variant="text" [rounded]="true" label="" (click)="sendGuess(this.childGuess);"  [outlined]="true" styleClass="w-full">
+                <span>
+                  <img class="GameIcon" src="assets/Img/icon-Pokeball.png" alt="Guess icon" title="Make guess">
+                </span>
+              </p-button>
+              <p-button variant="text" [rounded]="true" label="" (click)="pressGetClue();"  [outlined]="true" styleClass="w-full" [disabled]="this.clues > 0 ? false : true">
+                <span>
+                  <img class="GameIcon" src="assets/Img/lens.webp" alt="Clue icon" title="Get Clue">
+                </span>
+              </p-button>
+          </div>
+          <div class="flex gap-4 mt-2 justify-center">
+            <p-button label="Rules"(click)="sendShowRules(true)"/>
+      </div>
     }
     @else if(lives == 0){
       <h1 style="font-size: 50px;">Game Over</h1>
@@ -104,13 +105,16 @@ import { FormsModule } from '@angular/forms';
       <p-button label="Start" class="w-full" (click)="start()"/>
     }
     </p-card>
-  </div>
+  <!-- </div> -->
 
   `,
   styles: [`
-  .card-container {
-    width: 100vw;
+
+  .cardClass {
+    overflow: 'hidden'; 
+    background-Color: 'rgba(29, 33, 56, 0.82)'
   }
+
   .substitute{
     width: 3rem;
   }
