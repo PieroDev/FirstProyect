@@ -49,6 +49,7 @@ import { FormsModule } from '@angular/forms';
 
 
     }
+    <!-- asd -->
     <div class="flex flex-col justify-center gap-4 mt-4" [style]="{height: '5rem'}">
       <p class="pokemonDataP">{{level > 0 ? 'Types:': ''}}</p>
       <div class="flex flex-row justify-center gap-4" [style]="{height: '5rem'}">
