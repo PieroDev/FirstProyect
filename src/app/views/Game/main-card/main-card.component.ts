@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
         @if(!isLoading() && pokemonDataDto){
           <div class="flex flex-row mx-auto justify-center gameData">
             <div class="flex flex-col basis-1/3 justify-top text-right">
-              <p class="pokeData">Generation: 
+              <p class="pokeData">Gen: 
               <span>
                   <img class="pokemonTypesIcon" src= "assets/PokeNumbers/{{generation}}.png" alt="Clue icon" title="Clues">
                 </span>
