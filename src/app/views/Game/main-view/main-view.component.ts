@@ -106,7 +106,6 @@ import { GenerationLevels, myData } from '../../../Dtos/GenerationLevels/generat
   .logo{
     width: 30%;
   }
-  
   `]
 
 }

@@ -32,10 +32,10 @@ import { FormsModule } from '@angular/forms';
             </div>
             <div class="pokeImg ml-6 mr-6">
               <p-image alt="CardImg" 
-                [class]="{'silhouette': this.guessResult == 'unanswered', 
+                [class]="{
+                  'silhouette': this.guessResult == 'unanswered', 
                   'correctAnswer': this.guessResult == 'ok', 
-                  'errorAnswer': this.guessResult == 'fail'}" 
-                [style]="{backgroundColor: 'blue'}"
+                  'errorAnswer': this.guessResult == 'fail'}"
                 src= "assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" 
               /> 
             </div>
