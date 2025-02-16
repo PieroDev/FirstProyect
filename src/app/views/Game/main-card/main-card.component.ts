@@ -11,99 +11,131 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-main-card',
   imports: [CardModule, Button, ButtonModule, ImageModule, InputOtpModule, FormsModule],
   template: `
-  <!-- <div class="card-container p-2 flex items-center justify-center"> -->
+  <div class="flex flex-col justify-center text-center" >
     <p-card  
-    class="cardClass text-center"
-    [style]="{backgroundColor: 'rgba(29, 33, 56, 0.76)', minWidth: '75vw'}"
+    [style]="{backgroundColor: 'rgba(29, 33, 56, 0.76)', minWidth: '75vw', minHeight: '75vh'}"
     >
       @if(level > 0 && lives > 0){
         @if(!isLoading() && pokemonDataDto){
-        <div class="flex items-center justify-center pokeImgContainer">
-          <p-image alt="CardImg" [class]="{'silhouette': this.guessResult == 'unanswered', 'correctAnswer': this.guessResult == 'ok', 'errorAnswer': this.guessResult == 'fail'}" class="w-full mx-auto m-1 pokeImg " 
-          src= "assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" /> 
-        </div>
-        <div class="card flex items-center flex-col justify-center inputsContainer" >
-        <!-- ngModel es el que relaciona el valor del input a la variable declarada -->
-        @if(loadGuess){
-            <p-inputotp [style]="{fontSize: '16px'}" class="inputText" name="guessInput" type="text" [(ngModel)]="this.childGuess" [length]="pokeNameFormated.length" size="small" (keydown)="keydownDetect($event, this.childGuess)" [autofocus]="true" ></p-inputotp>
-            <p-inputotp name="cluesInput" class="mt-2" type="text" [(ngModel)]="this.actualClue" [length]="pokeNameFormated.length" size="small" [disabled]="true"></p-inputotp>
-          }
-          <p class="pokeData">Clues left: {{clues}}</p>
-          <p class="pokeData">Generation: {{generation}}</p>
-        </div>
-
-        
-        }
-      @else{
-        <div class="flex items-center justify-center pokeImgContainer">
-        <p class=""></p>
-        <p class=""></p>
-        </div>
-        <div class="card flex items-center flex-col justify-center inputsContainer" >
-          <p class="pokeData"></p>
-          <p class="pokeData"></p>
-        </div>
-
-
-      }
-      <!-- asd -->
-      <div class="flex flex-col justify-center" [style]="{height: '2rem'}">
-        <p class="pokeData">{{level > 0 ? 'Types:': ''}}</p>
-        <div class="flex flex-row justify-center gap-4" [style]="{height: '5rem'}">
-          @if(!isLoading() && this.pokemonDataDto){
-            @for(type of this.pokemonDataDto.types; track type.slot){
-              <p class="pokeData">
-                <span>
-                  <img class="pokemonTypesIcon" title="{{type.type.name}}" src="assets/PokedexImages/Type-Icons/types/{{type.type.name}}.png" alt="{{type.type.name}}">
+          <div class="flex flex-row mx-auto justify-center gameData">
+            <div class="flex flex-col basis-1/3 justify-top text-right">
+              <p class="pokeData">Generation: 
+              <span>
+                  <img class="pokemonTypesIcon" src= "assets/PokeNumbers/{{generation}}.png" alt="Clue icon" title="Clues">
                 </span>
               </p>
+              <p class="pokeData">
+                <span>
+                  <img class="pokemonTypesIcon" src="assets/Img/lens.webp" alt="Clue icon" title="Clues">
+                </span> X {{clues}}
+              </p>
+            </div>
+            <div class="pokeImg ml-6 mr-6">
+              <p-image alt="CardImg" 
+                [class]="{'silhouette': this.guessResult == 'unanswered', 
+                  'correctAnswer': this.guessResult == 'ok', 
+                  'errorAnswer': this.guessResult == 'fail'}" 
+                [style]="{backgroundColor: 'blue'}"
+                src= "assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" 
+              /> 
+            </div>
+          
+            @if(!isLoading() && this.pokemonDataDto)
+            {
+              <div class="flex flex-col basis-1/3 justify-top text-left">
+              <p class="pokeData">Type:</p>
+                @for(type of this.pokemonDataDto.types; track type.slot)
+                {
+                  <p class="pokeData">
+                    <span>
+                      <img class="pokemonTypesIcon" title="{{type.type.name}}" src="assets/PokedexImages/Type-Icons/types/{{type.type.name}}.png" alt="{{type.type.name}}">
+                    </span>
+                  </p>
+                }
+              </div>
             }
-          }
-        </div>
-      </div>
-      <div class="flex flex-col justify-center mt-2" [style]="{height: '10rem'}" >
-        @if(!startLevel() && level > 0){
-          <p class="pokeData">Lifes: </p>
-        <div class="flex flex-row justify-center gap-4">
-        @for(_ of [].constructor(lives); track $index) {
-          <span><img class="substitute" src="assets/Img/substitute.png" alt=""></span>
-        }
-        </div>
-        }
-      </div>
-
-      <div class="flex gap-4 mt-2 justify-center">
-              <p-button variant="text" [rounded]="true" label="" (click)="sendGuess(this.childGuess);"  [outlined]="true" styleClass="w-full">
-                <span>
-                  <img class="GameIcon" src="assets/Img/icon-Pokeball.png" alt="Guess icon" title="Make guess">
-                </span>
-              </p-button>
-              <p-button variant="text" [rounded]="true" label="" (click)="pressGetClue();"  [outlined]="true" styleClass="w-full" [disabled]="this.clues > 0 ? false : true">
-                <span>
-                  <img class="GameIcon" src="assets/Img/lens.webp" alt="Clue icon" title="Get Clue">
-                </span>
-              </p-button>
           </div>
-          <div class="flex gap-4 mt-2 justify-center">
-            <p-button label="Rules"(click)="sendShowRules(true)"/>
-      </div>
-    }
-    @else if(lives == 0){
-      <h1 style="font-size: 50px;">Game Over</h1>
-      <h3>Your Answers: </h3>
-      <div class="flex gap-4 mt-2 flex-wrap justify-center">
-        @for(answer of this.answersData; track answer.id){
-          <p-image class="anwerItemImg" [class]="{'correctAnswer': answer.correct, 'errorAnswer': !answer.correct}" src= "assets/PokedexImages/images/{{answer.idFormated}}.png" alt="Image" width="250" />
+          <div class="card flex items-center flex-col justify-center inputsContainer" >
+          <!-- ngModel es el que relaciona el valor del input a la variable declarada -->
+          @if(loadGuess){
+              <p-inputotp [style]="{fontSize: '16px'}" class="inputText" name="guessInput" type="text" [(ngModel)]="this.childGuess" [length]="pokeNameFormated.length" size="small" (keydown)="keydownDetect($event, this.childGuess)" [autofocus]="true" ></p-inputotp>
+              <p-inputotp name="cluesInput" class="mt-2" type="text" [(ngModel)]="this.actualClue" [length]="pokeNameFormated.length" size="small" [disabled]="true"></p-inputotp>
+              <p class="pokeData">Lives: </p>
+              <p>
+                @for(_ of [].constructor(lives); track $index) {
+                    <span><img class="pokemonTypesIcon substitute" src="assets/Img/substitute.png" alt=""></span>
+                }
+              </p>
+            }
+          </div>
+          }
+          @else{
+            <div class="flex flex-row mx-auto justify-center gameData">
+              <div class="flex flex-col basis-1/3 justify-top text-right">
+                <p class="pokeData">Gen: {{generation}}</p>
+                <p class="pokeData">
+                  <span>
+                    <img class="pokemonTypesIcon" src="assets/Img/lens.webp" alt="Clue icon" title="Clues">
+                  </span> X {{clues}}
+                </p>
+              </div>
+              <div class="pokeImg ml-6 mr-6">
+                <p-image alt="CardImg" 
+                /> 
+              </div>
+              <div class="flex flex-col basis-1/3 justify-top text-left">
+              <p class="pokeData">Type:</p>
+                <p class="pokeData">
+                  <span>
+                    <img class="pokemonTypesIcon">
+                  </span>
+                </p>
+            </div>
+          </div>
+          <div class="card flex items-center flex-col justify-center inputsContainer" >
+            <p class=""></p>
+            <p class="mt-2"></p>
+            <p class="pokeData">Lives: </p>
+              <p>
+                @for(_ of [].constructor(lives); track $index) {
+                    <span><img class="pokemonTypesIcon substitute" src="assets/Img/substitute.png" alt=""></span>
+                }
+              </p>
+          </div>
+          }
+          <div class="flex justify-center">
+            
+                  <p-button variant="text" [rounded]="true" label="" (click)="sendGuess(this.childGuess);"  [outlined]="true" styleClass="w-full">
+                    <span>
+                      <img class="GameIcon" src="assets/Img/icon-Pokeball.png" alt="Guess icon" title="Make guess">
+                    </span>
+                  </p-button>
+                  <p-button variant="text" [rounded]="true" label="" (click)="pressGetClue();"  [outlined]="true" styleClass="w-full" [disabled]="this.clues > 0 ? false : true">
+                    <span>
+                      <img class="GameIcon" src="assets/Img/lens.webp" alt="Clue icon" title="Get Clue">
+                    </span>
+                  </p-button>
+              </div>
+              <div class="flex gap-4 mt-2 justify-center">
+                <p-button label="Rules"(click)="sendShowRules(true)"/>
+          </div>
         }
-      </div>
-      <p-button label="Retry" class="w-full" (click)="restart()"/>
-    }
-    @else{
-      <h1>Start Game</h1>
-      <p-button label="Start" class="w-full" (click)="start()"/>
-    }
+        @else if(lives == 0){
+          <h1 style="font-size: 50px;">Game Over</h1>
+          <h3>Your Answers: </h3>
+          <div class="flex gap-4 mt-2 flex-wrap justify-center">
+            @for(answer of this.answersData; track answer.id){
+              <p-image class="anwerItemImg" [class]="{'correctAnswer': answer.correct, 'errorAnswer': !answer.correct}" src= "assets/PokedexImages/images/{{answer.idFormated}}.png" alt="Image" width="250" />
+            }
+          </div>
+          <p-button label="Retry" class="w-full" (click)="restart()"/>
+        }
+        @else{
+          <h1>Start Game</h1>
+          <p-button label="Start" class="w-full" (click)="start()"/>
+        }
     </p-card>
-  <!-- </div> -->
+  </div>
 
   `,
   styles: [`
@@ -113,17 +145,17 @@ import { FormsModule } from '@angular/forms';
     background-Color: 'rgba(29, 33, 56, 0.82)'
   }
 
+  .gameData{
+    min-height: 15rem;
+  }
   .substitute{
     width: 3rem;
   }
-  .pokeImgContainer{
-    height: 10rem;
-  }
   .inputsContainer{
-    height: 15rem
+    min-height: 8rem;
   }
   .pokeImg{
-    width: 10rem;
+    width: 12rem;
   }
   .pokeData{
     margin: 1rem;
@@ -136,7 +168,8 @@ import { FormsModule } from '@angular/forms';
     height: 2rem;
   }
   .pokemonTypesIcon{
-    width: 3rem;
+    width: 2rem;
+    display: inline-block;
   }
   .silhouette{
     filter: brightness(0%); 
