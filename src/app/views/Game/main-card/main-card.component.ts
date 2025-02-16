@@ -32,11 +32,11 @@ import { FormsModule } from '@angular/forms';
             </div>
             <div class="pokeImg ml-6 mr-6">
               <p-image alt="CardImg" 
+                src= "assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" 
                 [class]="{
                   'silhouette': this.guessResult == 'unanswered', 
                   'correctAnswer': this.guessResult == 'ok', 
                   'errorAnswer': this.guessResult == 'fail'}"
-                src= "assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" 
               /> 
             </div>
           
@@ -125,7 +125,7 @@ import { FormsModule } from '@angular/forms';
           <h3>Your Answers: </h3>
           <div class="flex gap-4 mt-2 flex-wrap justify-center">
             @for(answer of this.answersData; track answer.id){
-              <p-image class="anwerItemImg" [class]="{'correctAnswer': answer.correct, 'errorAnswer': !answer.correct}" src= "assets/PokedexImages/images/{{answer.idFormated}}.png" alt="Image" width="250" />
+              <p-image class="answerItemImg" [class]="{'correctAnswer': answer.correct, 'errorAnswer': !answer.correct}" src= "assets/PokedexImages/images/{{answer.idFormated}}.png" alt="Image" width="250" />
             }
           </div>
           <p-button label="Retry" class="w-full" (click)="restart()"/>
@@ -172,18 +172,17 @@ import { FormsModule } from '@angular/forms';
     display: inline-block;
   }
   .silhouette{
-    filter: brightness(0%); 
+    -webkit-filter: brightness(0%); 
   }
   .correctAnswer{
     filter: brightness(100%);
     -webkit-transition : -webkit-filter 500ms linear
   }
   .errorAnswer{
-    filter: grayscale(80%);
-    filter: brightness(25%); 
+    -webkit-filter: brightness(20%);
     -webkit-transition : -webkit-filter 500ms linear
   }
-  .anwerItemImg{
+  .answerItemImg{
     width: 25%
   }
   .GameIcon{
