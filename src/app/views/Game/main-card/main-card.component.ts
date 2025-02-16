@@ -173,12 +173,15 @@ import { FormsModule } from '@angular/forms';
   }
   .silhouette{
     -webkit-filter: brightness(0%); 
+    filter: brightness(0%);
   }
   .correctAnswer{
+    -webkit-filter: brightness(100%); 
     filter: brightness(100%);
     -webkit-transition : -webkit-filter 500ms linear
   }
   .errorAnswer{
+    filter: brightness(20%);
     -webkit-filter: brightness(20%);
     -webkit-transition : -webkit-filter 500ms linear
   }
