@@ -31,15 +31,14 @@ import { NgClass } from '@angular/common';
                 </span> X {{clues}}
               </p>
             </div>
-            <div class="pokeImg ml-6 mr-6">
-              <p-image alt="CardImg" 
+            <p-image alt="CardImg" 
                 src= "assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" 
                 [ngClass]="{
                   'silhouette': this.guessResult == 'unanswered', 
                   'correctAnswer': this.guessResult == 'ok', 
                   'errorAnswer': this.guessResult == 'fail'}"
+                class="pokeImg ml-6 mr-6"
               /> 
-            </div>
           
             @if(!isLoading() && this.pokemonDataDto)
             {

@@ -43,30 +43,6 @@ import { GenerationLevels, myData } from '../../../Dtos/GenerationLevels/generat
           [guessResult]="guessResult"
         >
       </app-main-card>
-      <app-main-card
-          [generation]=generation
-          [lives]=lives
-          [level]=level
-          [clues]=clues
-          [pokeNumber]=pokeNumber
-          [pokeNumberFormated] =pokeNumberFormated
-          [pokeName] = pokeName
-          [pokemonDataDto] = pokeNewDataDto
-          (show)=getShowRules($event)
-          (nextPokemonLevel)=nextPokemonLevel()
-          [isLoading] = isLoadingData()
-          (retry)=retry()
-          (startGame)=start()
-          [startLevel]=startLevel()
-          (addPokeAnswer)="addPokeAnswer($event)"
-          [answersData]=pokeAnswers
-          [pokeNameFormated]=pokeNameFormated
-          (getClue)="getClue()"
-          (getGuess)="getGuess($event)"
-          [actualClue]="actualClue"
-          [guessResult]="guessResult"
-        >
-      </app-main-card>
       
       
     </div>
