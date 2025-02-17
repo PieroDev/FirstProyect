@@ -6,10 +6,11 @@ import { PokemonDataDto } from '../../../Dtos/Pokemon/PokemonData/pokemon-dataDt
 import { AnswersDto } from '../../../Dtos/Answer/answers-dto';
 import { InputOtpModule } from 'primeng/inputotp';
 import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-main-card',
-  imports: [CardModule, Button, ButtonModule, ImageModule, InputOtpModule, FormsModule],
+  imports: [CardModule, Button, ButtonModule, ImageModule, InputOtpModule, FormsModule, NgClass],
   template: `
   <div class="flex flex-col justify-center text-center" >
     <p-card  
@@ -33,7 +34,7 @@ import { FormsModule } from '@angular/forms';
             <div class="pokeImg ml-6 mr-6">
               <p-image alt="CardImg" 
                 src= "assets/PokedexImages/images/{{this.pokeNumberFormated}}.png" 
-                [class]="{
+                [ngClass]="{
                   'silhouette': this.guessResult == 'unanswered', 
                   'correctAnswer': this.guessResult == 'ok', 
                   'errorAnswer': this.guessResult == 'fail'}"
